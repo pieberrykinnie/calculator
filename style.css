@@ -26,6 +26,7 @@ body {
     padding: 8px;
     border: 1px solid gray;
     flex: 4 1 320px;
+    min-height: 40px;
     text-align: right;
 }
 

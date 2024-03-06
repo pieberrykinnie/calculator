@@ -36,3 +36,20 @@ function operate(operation, num1, num2) {
 
     return result;
 }
+
+const container = document.querySelector("#container");
+const output = container.querySelector(".output");
+const buttons = container.querySelectorAll(".button");
+
+let outputValue = output.textContent;
+
+buttons.forEach(button => button.addEventListener("click", (e) => {
+    const option = e.target.value;
+    
+    if (option !== "Clear") {
+        output.textContent += option;
+    } else {
+        output.textContent = "";
+    }
+    
+}))
