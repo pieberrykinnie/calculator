@@ -1,0 +1,40 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+#container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid black;
+    margin: 16px;
+    font-size: large;
+    width: max-content;
+    max-width: 320px;
+    gap: 8px;
+    padding: 8px;
+}
+
+.output {
+    padding: 8px;
+    border: 1px solid gray;
+    flex: 4 1 320px;
+    text-align: right;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid black;
+    flex: 1 1 64px;
+    font-size: large;
+}
