@@ -54,10 +54,11 @@ buttons.forEach(button => button.addEventListener("click", (e) => {
                     case ADD:
                     case SUBTRACT:
                         if (buffer.length > 0
-                            && (buffer[buffer.length - 1] === MULTIPLY
-                            || buffer[buffer.length - 1] === DIVIDE)) {
-                                break;
+                            && !isNaN(buffer[buffer.length - 1])) {
+                            buffer.push(inputBuffer);
+                            inputBuffer = "";
                         }
+                        break;
 
                     case MULTIPLY:
                     case DIVIDE:
@@ -70,12 +71,13 @@ buttons.forEach(button => button.addEventListener("click", (e) => {
                 }
 
                 inputBuffer += option;
+                output.textContent = buffer.reduce((total, e) => total + " " + e, "") + " " + inputBuffer;
                 break;
 
             case "operation":
                 switch (inputBuffer) {
                     case "":
-                        if (option === ADD || option === SUBTRACT) {
+                        if (buffer.length !== 0 || option === ADD || option === SUBTRACT) {
                             inputBuffer = option;
                         }
                         break;
@@ -103,9 +105,18 @@ buttons.forEach(button => button.addEventListener("click", (e) => {
                         inputBuffer = option;
                         break;
                 }
+                output.textContent = buffer.reduce((total, e) => total + " " + e, "") + " " + inputBuffer;
                 break;
 
             case "result":
+                buffer.push(Number(inputBuffer));
+                
+                buffer[0] = computeResult(buffer);
+                buffer.length = 1;
+
+                output.textContent = buffer[0];
+
+                inputBuffer = "";
                 break;
 
             default:
@@ -116,8 +127,46 @@ buttons.forEach(button => button.addEventListener("click", (e) => {
         inputBuffer = "";
         output.textContent = "";
     }
-
-    output.textContent = buffer.reduce((total, e) => total + " " + e, "") + " " + inputBuffer;
-    console.log(buffer);
-    
 }))
+
+function computeResult(arr) {
+    let result = 0;
+
+    if (arr.length === 1) {
+        result = arr[0];
+    } else if (arr.length > 1) {
+        if (isNaN(arr[arr.length - 1])) {
+            arr.pop();
+        }
+
+        let indexSign;
+
+        do {
+            indexSign = arr.findIndex(e => e === MULTIPLY || e === DIVIDE);
+
+            if (indexSign !== -1) {
+                result = arr[indexSign] === MULTIPLY
+                ? multiply(arr[indexSign - 1], arr[indexSign + 1])
+                : divide(arr[indexSign - 1], arr[indexSign + 1]);
+            
+                arr.splice(indexSign - 1, 3, result);
+            }
+
+        } while (indexSign !== -1)
+
+        do {
+            indexSign = arr.findIndex(e => e === ADD || e === SUBTRACT);
+
+            if (indexSign !== -1) {
+                result = arr[indexSign] === ADD
+                ? add(arr[indexSign - 1], arr[indexSign + 1])
+                : subtract(arr[indexSign - 1], arr[indexSign + 1]);
+            
+                arr.splice(indexSign - 1, 3, result);
+            }
+
+        } while (indexSign !== -1)
+    }
+
+    return result;
+}
